@@ -61,8 +61,10 @@ def classify_xai(question: str, api_key: str, model: str = 'grok-4-1-fast-reason
    return None,'AI output failed schema checks'
   if conf<0.75: return None,'AI confidence below 0.75'
   return topic,'AI label passed schema and confidence checks'
- except Exception:
-  return None,'AI service unavailable or response invalid'
+ except Exception as e:
+    import logging
+    logging.exception("xAI classification failed")
+    return None, "AI request failed; check Streamlit server logs"
 
 def evaluate(question: str, invested:float=18000, current:float=16200, api_key:Optional[str]=None, model:str='grok-4-1-fast-reasoning') -> Result:
  question=question.strip()[:1500]

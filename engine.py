@@ -86,3 +86,7 @@ def evaluate(question: str, invested:float=18000, current:float=16200, api_key:O
   sign='higher' if numbers['difference']>=0 else 'lower'
   description += f" In the illustrative figures entered, current value is ₹{abs(numbers['difference']):,.2f} {sign} than invested amount (simple difference {numbers['simple_pct']:+.2f}%). This is not an XIRR calculation or an account statement."
  return Result(topic,'Pass',description,'AI intent passed; response rendered from reviewed educational templates and validated arithmetic','xAI classification + deterministic content')
+except Exception as e:
+    import logging
+    logging.exception("xAI classification failed")
+    return None, "AI request failed; check Streamlit server logs"

@@ -327,16 +327,32 @@ def classify_openrouter(
             timeout=40,
         )
 
-        if not response.ok:
-            logging.error(
-                "OpenRouter returned HTTP %s",
-                response.status_code,
-            )
+        
+if not response.ok:
+    try:
+        error_data = response.json().get("error", {})
+        error_code = error_data.get("code", response.status_code)
+        error_type = error_data.get("metadata", {}).get("error_type", "unknown")
+        error_message = str(error_data.get("message", "No details"))
 
-            return (
-                None,
-                f"OpenRouter HTTP {response.status_code}",
-            )
+        # Keep diagnostics short; never expose API credentials.
+        logging.error(
+            "OpenRouter HTTP %s | Code: %s | Type: %s | Message: %s",
+            response.status_code,
+            error_code,
+            error_type,
+            error_message[:250],
+        )
+
+        return None, f"OpenRouter HTTP {response.status_code}"
+
+    except (ValueError, AttributeError, TypeError):
+        logging.error(
+            "OpenRouter HTTP %s | Could not parse error",
+            response.status_code,
+        )
+        return None, f"OpenRouter HTTP {response.status_code}"
+
 
         payload = response.json()
 

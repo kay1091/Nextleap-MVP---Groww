@@ -45,26 +45,30 @@ def local_hint(q: str) -> str:
 
 SYSTEM = '''You classify a user's question about *understanding* SIP performance for an educational app. Output exactly one JSON object, without markdown: {"topic":"daily_vs_total|invested_vs_current|xirr|sip_vs_lumpsum|unknown","confidence":0.0}. Do not write a user-facing explanation. Use unknown for investment advice, predictions, specific fund/stock decisions, personal tax/legal advice, or unverifiable account details. Classify based only on the supplied question. You have no live account data.''' 
 
-def classify_xai(question: str, api_key: str, model: str = 'grok-4-1-fast-reasoning') -> tuple[Optional[str],str]:
- """Grok performs a narrow semantic classification, never writes financial conclusions."""
- try:
-  import requests
-  resp=requests.post('https://api.x.ai/v1/chat/completions', headers={'Authorization':f'Bearer {api_key}','Content-Type':'application/json'},json={'model':model,'temperature':0,'max_tokens':80,'messages':[{'role':'system','content':SYSTEM},{'role':'user','content':question[:1500]}]},timeout=18)
-  resp.raise_for_status()
-  content=resp.json()['choices'][0]['message']['content'].strip()
-  if content.startswith('```'):
-   content=re.sub(r'^```(?:json)?\s*|\s*```$','',content).strip()
-  obj=json.loads(content)
-  topic=obj.get('topic')
-  conf=obj.get('confidence')
-  if topic not in TOPICS or not isinstance(conf,(int,float)) or isinstance(conf,bool) or not (0<=conf<=1):
-   return None,'AI output failed schema checks'
-  if conf<0.75: return None,'AI confidence below 0.75'
-  return topic,'AI label passed schema and confidence checks'
- except Exception as e:
-    import logging
-    logging.exception("xAI classification failed")
-    return None, "AI request failed; check Streamlit server logs"
+import os
+import requests
+
+api_key = os.environ.get("OPENROUTER_API_KEY")
+model = os.environ.get("OPENROUTER_MODEL", "openrouter/free")
+
+response = requests.post(
+    "https://openrouter.ai/api/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "model": model,
+        "messages": messages,  # Keep existing classification instructions
+        "temperature": 0,
+        "max_tokens": 300,
+    },
+    timeout=30,
+)
+
+response.raise_for_status()
+result = response.json()
+content = result["choices"][0]["message"]["content"]
 
 def evaluate(question: str, invested:float=18000, current:float=16200, api_key:Optional[str]=None, model:str='grok-4-1-fast-reasoning') -> Result:
  question=question.strip()[:1500]

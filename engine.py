@@ -328,21 +328,45 @@ def classify_openrouter(
         )
 
         
-if not response.ok:
-    try:
-        error_data = response.json().get("error", {})
-        error_code = error_data.get("code", response.status_code)
-        error_type = error_data.get("metadata", {}).get("error_type", "unknown")
-        error_message = str(error_data.get("message", "No details"))
 
-        # Keep diagnostics short; never expose API credentials.
-        logging.error(
-            "OpenRouter HTTP %s | Code: %s | Type: %s | Message: %s",
-            response.status_code,
-            error_code,
-            error_type,
-            error_message[:250],
-        )
+        if not response.ok:
+            logging.error(
+                "OpenRouter returned HTTP %s",
+                response.status_code,
+            )
+
+            try:
+                error_data = response.json()
+                error = error_data.get("error", {})
+
+                if isinstance(error, dict):
+                    error_message = str(
+                        error.get("message", "No details")
+                    )
+                else:
+                    error_message = str(error)
+
+                # Redact common key patterns before logging.
+                error_message = re.sub(
+                    r"sk-or-[A-Za-z0-9_-]+",
+                    "[REDACTED]",
+                    error_message,
+                )
+
+                logging.error(
+                    "OpenRouter error: %s",
+                    error_message[:200],
+                )
+
+            except (ValueError, AttributeError, TypeError):
+                logging.error(
+                    "Could not parse OpenRouter error response"
+                )
+
+            return (
+                None,
+                f"OpenRouter HTTP {response.status_code}",
+            )
 
         return None, f"OpenRouter HTTP {response.status_code}"
 

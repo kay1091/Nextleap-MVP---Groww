@@ -14,8 +14,8 @@ with st.form('question'):
  with c2: current=st.number_input('Example current value (₹)',min_value=0.0,value=16200.0,step=500.0)
  go=st.form_submit_button('Explain these numbers',type='primary',use_container_width=True)
 if go:
- key=os.environ.get('XAI_API_KEY')
- try: key=st.secrets.get('XAI_API_KEY',key)
+ key=os.environ.get('OPENROUTER_API_KEY')
+ try: key=st.secrets.get('OPENROUTER_API_KEY',key)
  except Exception: pass
  model=os.environ.get('XAI_MODEL','grok-4-1-fast-reasoning')
  with st.spinner('Checking the explanation...'):

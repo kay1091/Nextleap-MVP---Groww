@@ -17,7 +17,10 @@ if go:
  key=os.environ.get('OPENROUTER_API_KEY')
  try: key=st.secrets.get('OPENROUTER_API_KEY',key)
  except Exception: pass
- model=os.environ.get('XAI_MODEL','grok-4-1-fast-reasoning')
+ model = st.secrets.get(
+    "OPENROUTER_MODEL",
+    "openrouter/free"
+)
  with st.spinner('Checking the explanation...'):
   r=evaluate(q,invested,current,key,model)
  if r.gate=='Pass':st.success('Quality gate: PASS — classified intent, verified topic and template, checked arithmetic')

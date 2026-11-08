@@ -491,6 +491,20 @@ def classify_openrouter(
         if not isinstance(message, dict):
             return None, "Missing completion message"
 
+        usage = payload.get("usage") or {}
+
+completion_details = (
+    usage.get("completion_tokens_details") or {}
+)
+
+logging.warning(
+    "OpenRouter model=%s | finish_reason=%s | "
+    "completion_tokens=%s | reasoning_tokens=%s",
+    payload.get("model", "unknown"),
+    first_choice.get("finish_reason", "unknown"),
+    usage.get("completion_tokens", "unknown"),
+    completion_details.get("reasoning_tokens", "unknown"),
+)
         content = message.get("content")
 
         if not isinstance(content, str) or not content.strip():

@@ -11,7 +11,7 @@ with st.form('question'):
  q=st.text_area('What would you like to understand?',value='My 1D return is -₹450 but my total return is positive. Was ₹450 deducted as a charge?',height=110)
  c1,c2=st.columns(2)
  with c1: invested=st.number_input('Example amount invested (₹)',min_value=0.0,value=18000.0,step=500.0)
- with c2: current=st.number_input('Example current value (₹)',min_value=0.0,value=16200.0,step=500.0)
+ with c2: current=st.number_input('Example current value (₹)',min_value=0.0,value=19200.0,step=500.0)
  go=st.form_submit_button('Explain these numbers',type='primary',use_container_width=True)
 if go:
  key=os.environ.get('OPENROUTER_API_KEY')
@@ -23,7 +23,13 @@ if go:
 )
  with st.spinner('Checking the explanation...'):
   r=evaluate(q,invested,current,key,model)
- if r.gate=='Pass':st.success('Quality gate: PASS — classified intent, verified topic and template, checked arithmetic')
+ if result.gate == "Pass":
+    st.success("Explanation checked")
+else:
+    st.warning(
+        "We couldn't confidently explain this question. "
+        "You can still use the glossary below."
+    )
  else:st.warning('Quality gate: FALLBACK — the AI explanation was not released')
  st.write(r.explanation)
  with st.expander('Why did the quality gate make this decision?'):

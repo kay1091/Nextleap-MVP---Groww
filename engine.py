@@ -571,18 +571,18 @@ def evaluate(
             description += (
                 f" In this hypothetical example, current value "
                 f"is ₹{difference:,.2f} higher than invested "
-                f"amount ({percentage:+.2f}% simple change)."
+                f"amount ({percentage:+.2f}% overall gain/loss in this example)."
             )
         elif difference < 0:
             description += (
                 f" In this hypothetical example, current value "
                 f"is ₹{abs(difference):,.2f} lower than invested "
-                f"amount ({percentage:+.2f}% simple change)."
+                f"amount ({percentage:+.2f}% overall gain/loss in this example)."
             )
         else:
             description += (
                 " In this hypothetical example, current value "
-                "equals invested amount (0.00% simple change)."
+                "equals invested amount (0.00% overall gain/loss in this example)."
             )
 
         description += (

@@ -18,7 +18,7 @@ with st.expander("How was this explanation checked?"):
             "so we haven't shown an AI-selected answer. "
             "The glossary remains available."
         )
-     with st.form('question'):
+ with st.form('question'):
  q=st.text_area('What would you like to understand?',value='My 1D return is -₹450 but my total return is positive. Was ₹450 deducted as a charge?',height=110)
  c1,c2=st.columns(2)
  with c1: invested=st.number_input('Example amount invested (₹)',min_value=0.0,value=18000.0,step=500.0)

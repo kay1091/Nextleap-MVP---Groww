@@ -422,7 +422,7 @@ def classify_openrouter(
             json={
                 "model": model.strip(),
                 "messages": messages,
-                "max_tokens": 400,
+                "max_tokens": 1500,
             },
             timeout=REQUEST_TIMEOUT,
         )

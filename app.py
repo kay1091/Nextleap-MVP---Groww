@@ -5,9 +5,20 @@ st.set_page_config(page_title='SIP Performance Explainer',page_icon='📖',layou
 st.title('SIP Performance Explainer')
 st.caption('A student PM prototype · Not affiliated with Groww · For education, not investment advice')
 st.write('Confused by the returns on your SIP? Try a hypothetical example. No login, portfolio upload or personal information needed.')
-with st.expander('What this prototype can and cannot do'):
- st.write('It can explain one-day change, invested/current values, XIRR and fair comparisons of SIP vs lump-sum returns. It cannot access your account, check charges, recommend funds, predict returns, or decide whether you should continue investing.')
-with st.form('question'):
+with st.expander("How was this explanation checked?"):
+    if result.gate == "Pass":
+        st.write(
+            "We checked what your question was about, "
+            "matched it to a reviewed explanation, "
+            "and calculated the example figures separately."
+        )
+    else:
+        st.write(
+            "We couldn't verify the explanation confidently, "
+            "so we haven't shown an AI-selected answer. "
+            "The glossary remains available."
+        )
+     with st.form('question'):
  q=st.text_area('What would you like to understand?',value='My 1D return is -₹450 but my total return is positive. Was ₹450 deducted as a charge?',height=110)
  c1,c2=st.columns(2)
  with c1: invested=st.number_input('Example amount invested (₹)',min_value=0.0,value=18000.0,step=500.0)

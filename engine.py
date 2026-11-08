@@ -46,16 +46,23 @@ TOPICS = (
 # ============================================================
 
 FACTS = {
-    "daily_vs_total": (
-        "One-day change vs overall return",
-        "A one-day return shows how the displayed market value "
-        "changed during the latest reported day. Overall gain "
-        "or loss compares the current value with the total "
-        "amount invested, subject to the platform's definitions. "
-        "A negative one-day change can occur alongside a positive "
-        "overall gain. A daily market-value movement does not "
-        "by itself mean money was deducted as a charge or withdrawn."
+    
+"daily_vs_total": (
+    "One-day change vs overall return",
+    (
+        "A negative one-day return does not automatically mean "
+        "money was deducted as a fee or withdrawn. "
+        "It usually describes a change in the displayed "
+        "market value over the latest reported day. "
+        "Your overall gain or loss is different: it compares "
+        "the current value with the amount invested. "
+        "You can therefore see a negative one-day change "
+        "while still having a positive overall gain. "
+        "This explanation uses hypothetical numbers and "
+        "does not verify transactions in your account."
     ),
+),
+,
 
     "invested_vs_current": (
         "Invested amount vs current value",

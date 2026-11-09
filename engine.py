@@ -62,7 +62,6 @@ FACTS = {
         "does not verify transactions in your account."
     ),
 ),
-,
 
     "invested_vs_current": (
         "Invested amount vs current value",
